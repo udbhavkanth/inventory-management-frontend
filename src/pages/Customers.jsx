@@ -1,35 +1,77 @@
 import Loader from '../components/common/Loader';
 import ErrorMessage from '../components/common/ErrorMessage';
 import EmptyState from '../components/common/EmptyState';
+import SuccessMessage from '../components/common/SuccessMessage';
+import CustomerForm from '../components/customers/CustomerForm';
+import CustomerTable from '../components/customers/CustomerTable';
 import { useCustomers } from '../hooks/useCustomers';
 
 function Customers() {
-  const { customers, loading, error, refreshCustomers } = useCustomers();
+  const {
+    customers,
+    loading,
+    submitting,
+    error,
+    successMessage,
+    refreshCustomers,
+    createCustomer,
+    deleteCustomer,
+    clearSuccess,
+  } = useCustomers();
+
+  const handleCreate = async (data) => {
+    try {
+      await createCustomer(data);
+    } catch {
+      // Error handled by hook
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteCustomer(id);
+    } catch {
+      // Error handled by hook
+    }
+  };
+
+  const isInitialLoad = loading && customers.length === 0;
 
   return (
     <section className="page">
-      <h2 className="page__title">Customer Management</h2>
+      <div className="page__header">
+        <h2 className="page__title">Customer Management</h2>
+      </div>
 
-      {loading && <Loader message="Loading customers..." />}
-      {error && (
-        <ErrorMessage message={error} onRetry={refreshCustomers} />
+      {successMessage && (
+        <SuccessMessage message={successMessage} onDismiss={clearSuccess} />
       )}
-      {!loading && !error && customers.length === 0 && (
+      {error && <ErrorMessage message={error} onRetry={refreshCustomers} />}
+      {isInitialLoad && <Loader message="Loading customers..." />}
+
+      <div className="page__section">
+        <CustomerForm onSubmit={handleCreate} submitting={submitting} />
+      </div>
+
+      {!isInitialLoad && !error && customers.length === 0 && (
         <EmptyState
           title="No customers found"
-          message="There are no customers to display yet."
+          message="Create your first customer using the form above."
           actionLabel="Refresh"
           onAction={refreshCustomers}
         />
       )}
 
-      <div className="page__section">
-        <div className="placeholder-card">Customer Form Coming Soon</div>
-      </div>
-
-      <div className="page__section">
-        <div className="placeholder-card">Customer Table Coming Soon</div>
-      </div>
+      {customers.length > 0 && (
+        <div className="page__section">
+          <CustomerTable
+            customers={customers}
+            onDelete={handleDelete}
+            onRefresh={refreshCustomers}
+            submitting={submitting || loading}
+          />
+        </div>
+      )}
     </section>
   );
 }
