@@ -4,14 +4,22 @@ A production-ready React frontend for managing inventory, products, customers, a
 
 ## Project Overview
 
-This application provides the client-side interface for an Inventory Management System. Phase 1 includes:
+This application provides the client-side interface for an Inventory & Order Management System. The frontend foundation includes:
 
-- **Dashboard** — Overview and key metrics (placeholder)
-- **Products** — Product catalog management (placeholder)
-- **Customers** — Customer records management (placeholder)
-- **Orders** — Order tracking and management (placeholder)
+- **Admin dashboard layout** — Sidebar navigation, responsive navbar, and main content area
+- **Service layer** — Axios-based API services mapped to the backend contract
+- **Custom hooks** — Data fetching, loading/error state, and mutation actions
+- **Reusable components** — Loader, ErrorMessage, EmptyState, StatCard
+- **Placeholder pages** — Dashboard stats and entity management sections ready for CRUD implementation
 
-The project is structured for scalability with clear separation of concerns: pages, layouts, routes, services, and shared context.
+### Pages
+
+| Route | Page | Status |
+|-------|------|--------|
+| `/` | Dashboard | Static placeholder stat cards |
+| `/products` | Product Management | Hook-wired; form/table coming soon |
+| `/customers` | Customer Management | Hook-wired; form/table coming soon |
+| `/orders` | Order Management | Hook-wired; form/list coming soon |
 
 ## Tech Stack
 
@@ -20,10 +28,24 @@ The project is structured for scalability with clear separation of concerns: pag
 - **React Router DOM** — Client-side routing
 - **Axios** — HTTP client for API communication
 
+State is managed with React hooks only (no Redux, Zustand, or React Query).
+
+## Architecture
+
+```
+Pages → Custom Hooks → Services → Axios (api.js) → Backend API
+```
+
+- **Pages** consume hooks and render common UI components
+- **Hooks** manage loading, error, data, and refresh/mutation actions
+- **Services** contain API method definitions only (no UI logic)
+- **Components** are organized by domain (`layout/`, `common/`, `dashboard/`, etc.)
+
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) v18 or higher
 - npm v9 or higher
+- Backend API running (default: `http://localhost:8000`)
 
 ## Installation
 
@@ -81,15 +103,34 @@ The app will be available at [http://localhost:5173](http://localhost:5173).
 
 ```
 src/
-├── components/       # Reusable UI components
-├── pages/            # Route-level page components
-├── services/         # API and external service integrations
-├── routes/           # Route definitions
-├── context/          # React context providers
-├── layouts/          # Layout wrappers (e.g. MainLayout)
-├── App.jsx           # Root application component
-└── main.jsx          # Application entry point
+├── assets/                 # Static assets
+├── components/
+│   ├── layout/             # Sidebar, Navbar
+│   ├── common/             # Loader, ErrorMessage, EmptyState
+│   ├── dashboard/          # StatCard
+│   ├── products/           # Product UI (Phase 2)
+│   ├── customers/          # Customer UI (Phase 2)
+│   └── orders/             # Order UI (Phase 2)
+├── pages/                  # Route-level page components
+├── hooks/                  # Custom data hooks
+├── services/               # API service layer
+├── routes/                 # Route definitions
+├── layouts/                # MainLayout
+├── utils/                  # Shared utilities
+├── App.jsx
+└── main.jsx
 ```
+
+## API Integration
+
+Services are configured against the backend API:
+
+| Service | Endpoints |
+|---------|-----------|
+| `dashboardService` | `GET /dashboard` |
+| `productService` | `GET/POST /products`, `GET/PUT/DELETE /products/{id}` |
+| `customerService` | `GET/POST /customers`, `GET/DELETE /customers/{id}` |
+| `orderService` | `GET/POST /orders`, `GET/DELETE /orders/{id}` |
 
 ## License
 

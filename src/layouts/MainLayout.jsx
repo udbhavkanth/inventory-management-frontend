@@ -1,43 +1,34 @@
-import { NavLink, Outlet } from 'react-router-dom';
-
-const navLinks = [
-  { to: '/', label: 'Dashboard', end: true },
-  { to: '/products', label: 'Products' },
-  { to: '/customers', label: 'Customers' },
-  { to: '/orders', label: 'Orders' },
-];
+import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
+import Navbar from '../components/layout/Navbar';
+import Sidebar from '../components/layout/Sidebar';
 
 function MainLayout() {
-  return (
-    <div className="app-layout">
-      <header className="app-header">
-        <div className="app-header__inner">
-          <h1 className="app-logo">Inventory Management</h1>
-          <nav className="app-nav" aria-label="Main navigation">
-            <ul className="app-nav__list">
-              {navLinks.map(({ to, label, end }) => (
-                <li key={to}>
-                  <NavLink
-                    to={to}
-                    end={end}
-                    className={({ isActive }) =>
-                      `app-nav__link${isActive ? ' app-nav__link--active' : ''}`
-                    }
-                  >
-                    {label}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-      </header>
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-      <main className="app-main">
-        <div className="app-main__inner">
+  const closeSidebar = () => setSidebarOpen(false);
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
+  return (
+    <div className="admin-layout">
+      <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
+
+      {sidebarOpen && (
+        <button
+          type="button"
+          className="admin-sidebar-overlay"
+          onClick={closeSidebar}
+          aria-label="Close navigation menu"
+        />
+      )}
+
+      <div className="admin-main">
+        <Navbar onMenuToggle={toggleSidebar} />
+
+        <div className="admin-content">
           <Outlet />
         </div>
-      </main>
+      </div>
     </div>
   );
 }
