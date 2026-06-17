@@ -1,0 +1,10 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: https://api.yourdomain.com
+    ports:
+      - "80:80"
+    restart: always
