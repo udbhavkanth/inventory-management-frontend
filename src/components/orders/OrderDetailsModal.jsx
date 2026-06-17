@@ -46,6 +46,14 @@ function OrderDetailsModal({ isOpen, onClose, order, loading, error, onRetry }) 
                   <dd className="data-table__mono">{order.customer_id}</dd>
                 </div>
                 <div className="order-details__row">
+                  <dt>Customer Name</dt>
+                  <dd>{order.customer_name}</dd>
+                </div>
+                <div className="order-details__row">
+                  <dt>Customer Email</dt>
+                  <dd>{order.customer_email}</dd>
+                </div>
+                <div className="order-details__row">
                   <dt>Created Date</dt>
                   <dd>{formatDate(order.created_at)}</dd>
                 </div>

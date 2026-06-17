@@ -31,6 +31,7 @@ function OrdersTable({ orders, onViewDetails, onCancel, onRefresh, submitting })
             <tr>
               <th>Order ID</th>
               <th>Customer ID</th>
+              <th>Customer Name</th>
               <th>Total Amount</th>
               <th>Created Date</th>
               <th>Actions</th>
@@ -41,6 +42,7 @@ function OrdersTable({ orders, onViewDetails, onCancel, onRefresh, submitting })
               <tr key={order.id}>
                 <td className="data-table__mono">{order.id}</td>
                 <td className="data-table__mono">{order.customer_id}</td>
+                <td>{order.customer_name}</td>
                 <td>{formatCurrency(order.total_amount)}</td>
                 <td>{formatDate(order.created_at)}</td>
                 <td>
